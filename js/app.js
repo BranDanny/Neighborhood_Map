@@ -153,25 +153,35 @@ function populateInfoWindow(marker, infowindow) {
   // 检查信息窗口是否已经打开
   if (infowindow.marker != marker) {
     // 清空内容, 加载街景内容
-    infowindow.setContent('<ul id ="NTarticle">' + marker.name + '</ul>');
-      var urlNT = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-      urlNT += '?' + $.param({
-              'api-key': "1d89947ec0204b0e8aed5c9173f3f2db",
-              'q': marker.name,
-              'sort': "newest"
-          });
-      $.getJSON(urlNT, function(data) {
-          //console.log(data);
-          var articles = data.response.docs;
-          for(var i =0; i < articles.length; i++){
-              var art = articles[i];
-              $('#NTarticle').append(
-                  '<li>'+'<a href="'+art.web_url+'">'+art.headline.main+'</a>'+'<p>'+art.snippet+'</p>'+'</li>'
-              );
-          }
-      }).error(function(){
-          $('#NTarticle').text('New York Times Articals Could Not Be Loaded');
+    //infowindow.setContent('<ul id ="NTarticle">' + marker.name + '</ul>');
+    //  var urlNT = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    //  urlNT += '?' + $.param({
+    //          'api-key': "1d89947ec0204b0e8aed5c9173f3f2db",
+    //          'q': marker.name,
+    //          'sort': "newest"
+    //      });
+    //  $.getJSON(urlNT, function(data) {
+    //      //console.log(data);
+    //      var articles = data.response.docs;
+    //      for(var i =0; i < articles.length; i++){
+    //          var art = articles[i];
+    //          $('#NTarticle').append(
+    //              '<li>'+'<a href="'+art.web_url+'">'+art.headline.main+'</a>'+'<p>'+art.snippet+'</p>'+'</li>'
+    //          );
+    //      }
+    //  }).error(function(){
+    //      $('#NTarticle').text('New York Times Articals Could Not Be Loaded');
+    //  });
+      const url = 'http://api.map.baidu.com/panorama/v2';
+      const params = $.param({
+          'ak': "p1bjfld6T3rwcqWMRHE5GhBvnexdIjIS",
+          'width': "200",
+          'height': "150",
+          'location': marker.position.lng()+","+marker.position.lat(),
+          'fov':90
       });
+      const endpoint = `${url}?${params}`;
+      infowindow.setContent('<div id ="pano">' + marker.name + '<img src = '+ endpoint +'/>' + '</div>');
     infowindow.marker = marker;
     // 关闭信息窗口时清空标记属性
     infowindow.addListener('closeclick', function() {
@@ -223,7 +233,7 @@ var Loc = function (data) {
 };
 
 var mapErrorHandler = function(){
-    window.alert("少年, 是不是忘了翻墙? -_____-")
+    window.alert("Google Map 迷路了 ——_- ")
 };
 
 
